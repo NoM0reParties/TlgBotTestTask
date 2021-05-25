@@ -1,155 +1,44 @@
-from models import Condition, choose_condition
+import models
+from bot_conditions import choose_condition
 
 
-def handle_continue(user, call, bot):
-    user.condition = Condition.get_by_id(2)
+def backwards_processor(call):
+    parsed_data = call.data.split('_')
+    model_name = parsed_data[-2].title() + 'Model'
+    get_model = getattr(models, model_name)
+    return get_model.get_by_id(int(parsed_data[-1]))
+
+
+def handle_showcase(user, call, bot):
+    user.condition = models.Condition.get_by_id(2)
     user.save()
+    id_key = int(call.data.split('_')[-1])
+    model = models.ShowcaseModel.get_by_id(id_key)
     current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_commands(call.message)
+    current_condition.proceed_commands(call.message, model)
 
 
-def handle_section_1(user, call, bot):
-    user.condition = Condition.get_by_id(3)
+def handle_section(user, call, bot):
+    user.condition = models.Condition.get_by_id(3)
     user.save()
+    id_key = int(call.data.split('_')[-1])
+    model = models.SectionModel.get_by_id(id_key)
     current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_1(call.message)
+    current_condition.proceed_commands(call.message, model)
 
 
-def handle_section_2(user, call, bot):
-    user.condition = Condition.get_by_id(3)
+def handle_goods(user, call, bot):
+    user.condition = models.Condition.get_by_id(4)
     user.save()
+    id_key = int(call.data.split('_')[-1])
+    model = models.GoodsModel.get_by_id(id_key)
     current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_2(call.message)
-
-
-def handle_section_3(user, call, bot):
-    user.condition = Condition.get_by_id(3)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_3(call.message)
-
-
-def handle_section_4(user, call, bot):
-    user.condition = Condition.get_by_id(3)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_4(call.message)
-
-
-def handle_goods_1(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_1(call.message)
-
-
-def handle_goods_2(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_2(call.message)
-
-
-def handle_goods_3(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_3(call.message)
-
-
-def handle_goods_4(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_4(call.message)
-
-
-def handle_goods_5(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_5(call.message)
-
-
-def handle_goods_6(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_6(call.message)
-
-
-def handle_goods_7(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_7(call.message)
-
-
-def handle_goods_8(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_8(call.message)
-
-
-def handle_goods_9(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_9(call.message)
-
-
-def handle_goods_10(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_10(call.message)
-
-
-def handle_goods_11(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_11(call.message)
-
-
-def handle_goods_12(user, call, bot):
-    user.condition = Condition.get_by_id(4)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_goods_12(call.message)
+    current_condition.proceed_commands(call.message, model)
 
 
 def handle_backwards(user, call, bot):
-    user.condition = Condition.get_by_id(user.condition.id - 1)
+    user.condition = models.Condition.get_by_id(user.condition.id - 1)
     user.save()
+    model = backwards_processor(call)
     current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_commands(call.message)
-
-
-def handle_backwards_croissant(user, call, bot):
-    user.condition = Condition.get_by_id(user.condition.id - 1)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_1(call.message)
-
-
-def handle_backwards_pie(user, call, bot):
-    user.condition = Condition.get_by_id(user.condition.id - 1)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_2(call.message)
-
-
-def handle_backwards_pancake(user, call, bot):
-    user.condition = Condition.get_by_id(user.condition.id - 1)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_3(call.message)
-
-
-def handle_backwards_cake(user, call, bot):
-    user.condition = Condition.get_by_id(user.condition.id - 1)
-    user.save()
-    current_condition = choose_condition(user.condition.id)(bot)
-    current_condition.proceed_section_4(call.message)
+    current_condition.proceed_commands(call.message, model)

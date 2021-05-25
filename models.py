@@ -1,7 +1,5 @@
 import peewee
 
-from bot_conditions import Freshman, Section, Showcase, Goods
-
 db = peewee.SqliteDatabase('bakery_users.db')
 
 
@@ -20,12 +18,31 @@ class BakeryUser(peewee.Model):
         database = db
 
 
-def choose_condition(number):
-    if number == 1:
-        return Freshman
-    elif number == 2:
-        return Showcase
-    elif number == 3:
-        return Section
-    elif number == 4:
-        return Goods
+class ShowcaseModel(peewee.Model):
+    name = peewee.CharField()
+    picture_path = peewee.CharField()
+    description = peewee.CharField()
+
+    class Meta:
+        database = db
+
+
+class SectionModel(peewee.Model):
+    name = peewee.CharField()
+    picture_path = peewee.CharField()
+    description = peewee.CharField()
+    showcase = peewee.ForeignKeyField(ShowcaseModel)
+
+    class Meta:
+        database = db
+
+
+class GoodsModel(peewee.Model):
+    name = peewee.CharField()
+    picture_path = peewee.CharField()
+    description = peewee.CharField()
+    section = peewee.ForeignKeyField(SectionModel)
+
+    class Meta:
+        database = db
+
