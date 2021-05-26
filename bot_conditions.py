@@ -23,8 +23,8 @@ class Showcase(Condition):
 
     def proceed_commands(self, message, model):
         self.keyboard = telebot.types.InlineKeyboardMarkup()
-        for i, section in enumerate(SectionModel.select().where(SectionModel.showcase == model)):
-            section_key = telebot.types.InlineKeyboardButton(text=section.description, callback_data=f'section_{i + 1}')
+        for section in SectionModel.select().where(SectionModel.showcase == model):
+            section_key = telebot.types.InlineKeyboardButton(text=section.description, callback_data=f'section_{section.id}')
             self.keyboard.row(section_key)
         self.bot.send_photo(message.chat.id, open(model.picture_path, 'rb'), model.description,
                             reply_markup=self.keyboard)
@@ -34,10 +34,12 @@ class Section(Condition):
 
     def proceed_commands(self, message, model):
         self.keyboard = telebot.types.InlineKeyboardMarkup()
-        for i, goods in enumerate(GoodsModel.select().where(GoodsModel.section == model)):
-            section_key = telebot.types.InlineKeyboardButton(text=goods.description, callback_data=f'goods_key_{i + 1}')
+        for goods in GoodsModel.select().where(GoodsModel.section == model):
+            section_key = telebot.types.InlineKeyboardButton(text=goods.description,
+                                                             callback_data=f'goods_key_{goods.id}')
             self.keyboard.row(section_key)
-        back_key = telebot.types.InlineKeyboardButton(text='Вернуться в предыдущий раздел', callback_data='back_showcase_1')
+        back_key = telebot.types.InlineKeyboardButton(text='Вернуться в предыдущий раздел',
+                                                      callback_data='back_showcase_1')
         self.keyboard.row(back_key)
         self.bot.send_photo(message.chat.id, open(model.picture_path, 'rb'), model.description,
                             reply_markup=self.keyboard)
